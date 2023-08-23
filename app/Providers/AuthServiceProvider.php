@@ -4,6 +4,7 @@ namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -21,6 +22,12 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // defines scopes (permissions) API clients can access via passport tokens
+        Passport::tokensCan([
+            'create-employees' => 'Create new employees',
+            'view-employees' => 'View employees',
+            'update-employees' => 'Update employees',
+            'delete-employees' => 'Delete employees',
+        ]);
     }
 }
