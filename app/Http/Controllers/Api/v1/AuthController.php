@@ -36,11 +36,8 @@ class AuthController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        // issue an access token (with all permission)
-        $token = $user->createToken(
-            str_replace(' ', '_', strtolower($user->name)).'_token',
-            (Passport::scopes()->pluck('id'))->toArray())
-            ->accessToken;
+        // issue an access token (depending on the user role)
+        $token = $this->generateAccessToken($user);
 
         return response()->json(['data' => ['user' => $user, 'access_token' => $token]]);
     }
@@ -49,15 +46,14 @@ class AuthController extends Controller
     public function register(RegisterRequest $request)
     {
         $userData = $request->validated();
+        $userData['role'] = 'user';
+        Log::info($userData);
 
         /** @var User $user */
         $user = User::create($userData);
 
-        // issue an access token (with all permission)
-        $token = $user->createToken(
-            str_replace(' ', '_', strtolower($user->name)).'_token',
-            (Passport::scopes()->pluck('id'))->toArray())
-            ->accessToken;
+        // issue an access token (depending on the user role)
+        $token = $this->generateAccessToken($user);
 
         return response()->json(['data' => ['user' => $user, 'access_token' => $token]], 201);
     }
@@ -70,9 +66,33 @@ class AuthController extends Controller
 
         // simply revoke all tokens on logout
         $user->tokens->each(function ($token, $key) {
-            $token->delete();
+            $token->revoke();
         });
 
         return response('', 204);
+    }
+
+
+    /**
+     * @var User $user the user you want to grant access token
+     * @return string access_token
+     */
+    private function generateAccessToken(User $user): string
+    {
+        $token = '';
+
+        if(!$user->isEmployee()) {
+            $token = $user->createToken(
+                str_replace(' ', '_', strtolower($user->name)).'_token',
+                (Passport::scopes()->pluck('id'))->toArray())
+                ->accessToken;
+        } else {
+            $token = $user->createToken(
+                str_replace(' ', '_', strtolower($user->name)).'_token',
+                ['view-employees'])
+                ->accessToken;
+        }
+
+        return $token;
     }
 }
