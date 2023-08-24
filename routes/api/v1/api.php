@@ -20,6 +20,16 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
 
-Route::middleware(['auth:api'])->group(function() {
-    Route::apiResource('/users', EmployeeController::class);
+Route::middleware([
+    'auth:api',
+    'access:create-employees,view-employees,update-employees,delete-employees'
+    ])
+    ->group(function() {
+        Route::apiResource('/users', EmployeeController::class);
+    }
+);
+
+Route::middleware(['auth:api', 'access:view-employees'])->group(function() {
+    Route::get('/users', [EmployeeController::class, 'index']);
+    Route::get('/users/{user}', [EmployeeController::class, 'show']);
 });
