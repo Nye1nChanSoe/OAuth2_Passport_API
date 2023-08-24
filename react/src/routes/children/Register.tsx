@@ -3,15 +3,8 @@ import { AxiosError } from 'axios';
 import { Link } from 'react-router-dom';
 import { useAuthContext } from '../../context/AuthContext';
 import { axiosClient } from '../../axios-client';
-import { AuthResponse } from '../../types';
+import { AuthResponse, RegisterPayload } from '../../types';
 import Error from '../../components/Error';
-
-interface RegisterPayload {
-  name: string | undefined,
-  email: string | undefined,
-  password: string | undefined,
-  password_confirmation: string | undefined,
-}
 
 
 const Register: React.FC = () => {
@@ -37,10 +30,8 @@ const Register: React.FC = () => {
     try {
       setLoading(true);
       const res = await axiosClient.post<unknown, AuthResponse>('/register', payload);
-      if(res) {
-        setUser(res.data.data.user);
-        setToken(res.data.data.access_token);
-      }
+      setUser(res.data.data.user);
+      setToken(res.data.data.access_token);
     } catch (error) {
       const err = error as AxiosError;
       setError(err.message);

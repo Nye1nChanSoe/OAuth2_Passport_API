@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\v1\AuthController;
 use App\Http\Controllers\Api\v1\EmployeeController;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -21,8 +22,8 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
 
-Route::post('/user', function() {
-    return response()->json(['data' => ['user' => Auth::user()]]);
+Route::get('/user', function() {
+    return response()->json(['data' => ['user' => new UserResource(Auth::user())]]);
 })->middleware('auth:api');
 
 

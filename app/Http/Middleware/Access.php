@@ -17,8 +17,6 @@ class Access
     public function handle(Request $request, Closure $next, ...$scopes): Response
     {
         $allowedScopes = $request->user()->token()->scopes;
-        Log::info($allowedScopes);
-        Log::info($scopes);
 
         foreach($scopes as $scope)
         {

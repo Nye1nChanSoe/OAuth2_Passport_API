@@ -17,8 +17,8 @@ const Login: React.FC = () => {
   const [ loading, setLoading ] = useState<boolean>(false);
   const [ error, setError ] = useState<string>();
 
-  const emailRef = useRef<HTMLInputElement | null>(null);
-  const passwordRef = useRef<HTMLInputElement | null>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
 
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -31,10 +31,8 @@ const Login: React.FC = () => {
     try {
       setLoading(true);
       const res = await axiosClient.post<unknown, AuthResponse>('/login', payload);
-      if (res) {
-        setUser(res.data.data.user);
-        setToken(res.data.data.access_token);
-      }
+      setUser(res.data.data.user);
+      setToken(res.data.data.access_token);
     } catch (error) {
       const err = error as AxiosError;
       setError(err.message);
