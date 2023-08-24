@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
@@ -25,7 +27,7 @@ class UpdateEmployeeRequest extends FormRequest
     {
         return [
             'name' => ['string', 'max:255'],
-            'email' => ['email', Rule::unique('users', 'email')],
+            'email' => [Rule::unique('users')->ignore(auth()->user())],
             'password' => ['confirmed', Password::min(8)->letters()->numbers()]
         ];
     }

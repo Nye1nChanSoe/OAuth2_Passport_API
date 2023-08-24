@@ -6,6 +6,7 @@ import Error from './Error';
 import { axiosClient } from '../axios-client';
 import EmployeeRecord from './EmployeeRecord';
 import CreateModal from './CreateModal';
+import { useAuthContext } from '../context/AuthContext';
 
 interface ReadResponse {
   data: {
@@ -28,6 +29,8 @@ interface CustomErrorResponse {
 
 
 const EmployeeListings: React.FC = () => {
+  const { user } = useAuthContext();
+
   const [ users, setUsers ] = useState<User[]>([]);
   const [ show, setShow ] = useState<boolean>(false);
   const [ error, setError ] = useState<string>();
@@ -104,13 +107,16 @@ const EmployeeListings: React.FC = () => {
     <div className='container mx-auto rounded'>
       <div className='flex items-center justify-between mb-8 p-4 bg-white shadow-sm rounded'>
         <h1 className='text-gray-600'>Employee Records</h1>
-        <button
-          onClick={ () => { setShow(() => !show) } }
-          type='button'
-          className='text-sm p-2 px-3.5 bg-gray-800 rounded-lg text-white hover:bg-gray-900'
-        >
-          { show ? 'Close' : 'Add Employee' }
-        </button>
+        {
+          user?.role === 'user' &&
+          <button
+            onClick={ () => { setShow(() => !show) } }
+            type='button'
+            className='text-sm p-2 px-3.5 bg-gray-800 rounded-lg text-white hover:bg-gray-900'
+          >
+            { show ? 'Close' : 'Add Employee' }
+          </button>
+        }
       </div>
 
       {
@@ -145,7 +151,7 @@ const EmployeeListings: React.FC = () => {
               users.map<JSX.Element>((user: User, index: number): JSX.Element => (
                 <EmployeeRecord
                   key={ index }
-                  user={ user }
+                  emp={ user }
                   editRecord={ handleEdit }
                   deleteRecord={ handleDelete }
                 />

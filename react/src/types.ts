@@ -2,6 +2,7 @@ export interface User {
     id: string,
     name: string,
     email: string,
+    role: string,
     created_at: Date,
     updated_at: Date,
 }
@@ -27,7 +28,7 @@ export interface AuthResponse {
 
 export interface RegisterPayload {
   name: string | undefined,
-  email: string | undefined,
+  email?: string | undefined,
   password?: string | undefined,
   password_confirmation?: string | undefined,
 }

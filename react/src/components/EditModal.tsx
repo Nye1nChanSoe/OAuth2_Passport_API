@@ -37,6 +37,11 @@ const EditModal: React.FC<Props> = ({ setShow, editRecord, _user }) => {
         password_confirmation: passwordConfRef?.current?.value,
       }
     }
+    else if(_user.email === user.email) {
+      payload = {
+        name: user.name
+      }
+    }
     else {
       payload = {
         name: user.name,
