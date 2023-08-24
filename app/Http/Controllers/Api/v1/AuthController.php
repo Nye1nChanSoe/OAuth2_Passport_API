@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Passport;
+use App\Http\Resources\UserResource;
 
 /**
  * Password Grant Client
@@ -39,7 +40,7 @@ class AuthController extends Controller
         // issue an access token (depending on the user role)
         $token = $this->generateAccessToken($user);
 
-        return response()->json(['data' => ['user' => $user, 'access_token' => $token]]);
+        return response()->json(['data' => ['user' => new UserResource($user), 'access_token' => $token]]);
     }
 
 
@@ -55,7 +56,7 @@ class AuthController extends Controller
         // issue an access token (depending on the user role)
         $token = $this->generateAccessToken($user);
 
-        return response()->json(['data' => ['user' => $user, 'access_token' => $token]], 201);
+        return response()->json(['data' => ['user' => new UserResource($user), 'access_token' => $token]], 201);
     }
 
 

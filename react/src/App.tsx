@@ -1,12 +1,16 @@
-import './index.css'
+import React from 'react';
+import { RouterProvider } from 'react-router-dom'
+import router from './router';
+import { AuthContextProvider } from './context/AuthContext';
 
-function App() {
+
+const App: React.FC = () => {
 
   return (
-    <div className='bg-blue-100 text-lg rounded-lg p-4 w-full text-center'>
-      Hello World
-    </div>
+    <AuthContextProvider>
+      <RouterProvider router={ router } />
+    </AuthContextProvider>
   )
 }
 
-export default App
+export default App;
